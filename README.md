@@ -1,6 +1,6 @@
 # App name: Spotify Hehe
 Spotify Hehe is a mini cloning of spotify to create playlist and add item to playlist
-##App Feature:
+## App Feature:
 ### Using hooks
 ### Using Grid and Flexbox
 ### Using Redux to save some data

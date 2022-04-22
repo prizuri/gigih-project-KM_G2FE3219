@@ -16,7 +16,7 @@ export default function UserAuth() {
     function handleLogin() {
         const BASE_URL = "https://accounts.spotify.com/authorize"
         const CLIENT_ID = process.env.REACT_APP_SPOTIFY_CLIENT_ID
-        const REDIRECT_URL_AFTER_LOGIN = "http://localhost:3000/login-success"
+        const REDIRECT_URL_AFTER_LOGIN = "https://spotify-hehe-by-priz.vercel.app/login-success"
         const SCOPE = ["playlist-modify-private", "user-read-private"]
         const TOKEN = "token"
         const SHOW_DIALOG = true

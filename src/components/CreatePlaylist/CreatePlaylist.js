@@ -3,6 +3,9 @@ import { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setPlaylistID } from "../../redux/create-slice"
 import { Redirect } from "react-router-dom"
+import TextField from '@mui/material/TextField';
+import { Button} from "@mui/material"
+import  "../../assets/styles/create-playlist.css"
 
 export default function CreatePlaylist() {
     const currentToken = useSelector(state => state.token.token)
@@ -10,7 +13,8 @@ export default function CreatePlaylist() {
         title: "",
         description: ""
     })
-
+    const [titleError, setTitleError] = useState(false)
+    const [textHelper, setTextHelper] = useState("")
     const dispatch = useDispatch()
     const handleUserID = async (token) => {
         try {
@@ -25,7 +29,7 @@ export default function CreatePlaylist() {
             return id
         }
         catch (error) {
-            alert(error)
+            alert(error) 
         }
     }
 
@@ -48,15 +52,18 @@ export default function CreatePlaylist() {
             return id
         }
         catch (error) {
-            alert(error)
+            alert(error) 
         }
     }
 
     const handleSubmit = async (event) => {
         event.preventDefault()
         const userID = await handleUserID(currentToken)
-        const playlistID = await handlePlaylistID(userID)
-        dispatch(setPlaylistID(playlistID))
+        const title = playlistForm.title
+        if (title.length >= 10) {
+            const playlistID = await handlePlaylistID(userID)
+            dispatch(setPlaylistID(playlistID))
+        }
     }
 
     function handleChange(event) {
@@ -67,17 +74,30 @@ export default function CreatePlaylist() {
                 [name]: value
             }
         })
-
+        if (value.length < 10) {
+            setTextHelper("the length should > 10")
+            setTitleError(true)
+        } else {
+            setTextHelper("")
+            setTitleError(false)
+        }
     }
 
     return (
         !(currentToken) ? <Redirect to="/" /> :
-            <form onSubmit={handleSubmit}>
-                <p>Title</p>
-                <input type="text" name="title" onChange={handleChange} minLength={10} required />
-                <p>Description</p>
-                <input name="description" onChange={handleChange} /><br />
-                <button>Create</button>
+            <form className="flex-container"
+                sx={{
+                    '& > :not(style)': { m: 1, width: '25ch' },
+                }}
+                noValidate
+                autoComplete="off"
+                onSubmit={handleSubmit}
+            >
+                <TextField  className="flex-item flex-input" name="title" label="Title" variant="outlined" onChange={handleChange} error={titleError} helperText={textHelper} required /><br/>
+                <TextField  className="flex-item flex-input" label="Description" variant="outlined" name="description" onChange={handleChange} /><br/>
+                <Button  className="flex-item flex-button" variant="outlined" type="submit">
+                    Create Playlist
+                </Button>
             </form>
     )
 }

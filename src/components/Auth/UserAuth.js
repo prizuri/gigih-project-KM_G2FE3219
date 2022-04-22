@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from "react-redux"
 import { Redirect } from "react-router-dom"
 import { setToken } from "../../redux/token-slice"
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 export default function UserAuth() {
     const dispatch = useDispatch()
@@ -22,13 +24,11 @@ export default function UserAuth() {
     }
 
     return (
-        <div>
-            {
-                !(currentToken) ?
-                    <button onClick={handleLogin}>Login to Spotify</button>
-                    :
-                    <Redirect to="/create-playlist" />
-            }
-        </div>
+        !(currentToken) ?
+            <Box textAlign='center'>
+                <Button variant="outlined" className="login" onClick={handleLogin}>Login Spotify</Button>
+            </Box>
+            :
+            <Redirect to="/create-playlist" />
     )
 }

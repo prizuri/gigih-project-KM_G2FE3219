@@ -2,7 +2,12 @@ import axios from "axios"
 import { useDispatch, useSelector } from "react-redux"
 import { musicList, setQuery } from "../../redux/create-slice"
 import React, { useState } from "react"
-import MusicData from "./MusicData"
+import "../../assets/styles/music.css"
+import { Button } from "@mui/material"
+import TextField from '@mui/material/TextField';
+import  "../../assets/styles/create-playlist.css"
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 
 export default function Search() {
     const currentMusics = useSelector(state => state.user.musics)
@@ -31,7 +36,7 @@ export default function Search() {
             const { items } = response.data.tracks
             dispatch(musicList(items))
         }
-        catch  {
+        catch {
             (dispatch(musicList([])))
         }
     }
@@ -58,32 +63,41 @@ export default function Search() {
         <div>
             {
                 !playlistID ?
-                    <p>Please create the playlist first</p>
+                    <span></span>
                     :
                     <div>
-                        <form onSubmit={handleSearch}>
-                            <input type="text" onChange={e => dispatch(setQuery(e.target.value))} />
-                            <button type="submit">Search</button>
+                        <form className="flex-container" onSubmit={handleSearch}>
+                            <TextField className="flex-item flex-input" name="search" label="Search" variant="outlined" onChange={e => dispatch(setQuery(e.target.value))} required /><br />
+                            <Button variant="contained" type="submit">Search</Button>
                         </form>
-                        {currentMusics.length !== 0 &&
-                            currentMusics.map(track => {
-                                return (
-                                    <div key={track.uri}>
-                                        <MusicData key={track.uri} url={track.album.images[0].url} name={track.name} album={track.album.artists[0].name} />
-                                        {!isSelect[track.uri] ?
-                                            <button onClick={() => {
-                                                uri = track.uri
-                                                fetchAddItem(uri)
-                                                setIsSelect({ ...isSelect, [track.uri]: true })
-                                            }}>Select</button>
-                                            : <button onClick={() => {
-                                                setIsSelect({ ...isSelect, [track.uri]: false })
-                                            }}>Deselect</button>
-                                        }
-                                    </div>
-                                )
-                            })
-                        }
+                        <Card className="grid-container" sx={{ minWidth: 275 }}>
+                            {currentMusics.length !== 0 &&
+                                currentMusics.map(track => {
+                                    return (
+                                        <CardContent key={track.uri} className="grid-item">
+                                            <div className="flex-container">
+                                                <img width="100%" src={track.album.images[0].url} alt="" />
+                                                <div>
+                                                    <p>{track.name}</p>
+                                                    <p >{track.album.artists[0].name}</p>
+                                                    {!isSelect[track.uri] ?
+                                                        <Button variant="contained" onClick={() => {
+                                                            uri = track.uri
+                                                            fetchAddItem(uri)
+                                                            setIsSelect({ ...isSelect, [track.uri]: true })
+                                                        }}>Select</Button>
+                                                        : <Button variant="contained" onClick={() => {
+                                                            setIsSelect({ ...isSelect, [track.uri]: false })
+                                                        }}>Deselect</Button>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </CardContent>
+                                    )
+                                })
+                            }
+                        </Card>
+
                     </div>
             }
         </div>
